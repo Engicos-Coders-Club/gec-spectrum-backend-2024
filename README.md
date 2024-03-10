@@ -2,4 +2,4 @@
 Backend server for Spectrum 2024
 
 
-Will be deployed as a docker container on [fl0.com](fl0.com)
+Will be deployed as a docker container on [fl0.com](https://www.fl0.com/)
