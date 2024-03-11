@@ -1,6 +1,4 @@
-import 'dotenv/config'; // ES module syntax for dotenv
 import 'express-async-errors';
-config();
 import express from 'express';
 const app = express();
 
@@ -20,10 +18,10 @@ import errorHandlerMiddleware from './middlewares/error-handler.js';
 // Security packages
 import helmet from 'helmet';
 import cors from 'cors';
-import xss from 'xss-clean';
+import xss from 'xss';
 import rateLimit from 'express-rate-limit';
 import { config } from 'dotenv' ;
-
+config();
 // JSON parser
 app.use(express.json());
 app.set('trust proxy', 1);
