@@ -22,7 +22,7 @@ import helmet from 'helmet';
 import cors from 'cors';
 import xss from 'xss-clean';
 import rateLimit from 'express-rate-limit';
-import { config } from 'dotenv';
+import { config } from 'dotenv' ;
 
 // JSON parser
 app.use(express.json());
