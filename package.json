@@ -4,15 +4,19 @@
     "description": "",
     "main": "app.js",
     "scripts": {
-        "start": "node app.js",
-        "test": "nodemon app.js"
-    },
+        "build": "tsc",
+        "start": "npm run build && node dist/src/app.js",
+        "dev": "nodemon --exec ts-node src/app.ts",
+        "test": "echo 'Error: no test specified' && exit 1"
+      },
+      
     "author": "Engicos-Coders-Club",
     "license": "ISC",
     "devDependencies": {
         "@types/mongoose": "^5.11.97",
         "@types/node": "^20.11.25",
         "nodemon": "^2.0.22",
+        "ts-node": "^10.9.2",
         "typescript": "^5.4.2"
     },
     "dependencies": {
