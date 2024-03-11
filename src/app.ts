@@ -21,6 +21,7 @@ import cors from 'cors';
 import xss from 'xss';
 import rateLimit from 'express-rate-limit';
 import { config } from 'dotenv' ;
+import { any, string } from 'joi';
 config();
 // JSON parser
 app.use(express.json());
@@ -39,8 +40,13 @@ app.use(helmet());
 app.use(cors());
 
 
-// Defined a middleware function to sanitize HTML inputs using xss library
-const sanitizeHTML = (req: Request, res: Response, next: NextFunction) => {
+// Define an interface for the request body
+interface RequestBody {
+  [key: string]: string; // Assuming all properties are strings for simplicity
+}
+
+// Define a middleware function to sanitize HTML inputs using xss library
+const sanitizeHTML = (req: express.Request<{}, {}, RequestBody>, res: Response, next: NextFunction) => {
   if (req.body && typeof req.body === 'object') {
     // Sanitize each property in req.body
     for (const key in req.body) {
@@ -51,6 +57,8 @@ const sanitizeHTML = (req: Request, res: Response, next: NextFunction) => {
   }
   next();
 };
+
+
 
 // Apply the HTML input sanitization middleware to all routes
 app.use(sanitizeHTML);
