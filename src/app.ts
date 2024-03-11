@@ -1,5 +1,5 @@
 import 'express-async-errors';
-import express from 'express';
+import express, { NextFunction } from 'express';
 const app = express();
 
 // Connect DB
@@ -37,7 +37,24 @@ app.use(
 
 app.use(helmet());
 app.use(cors());
-app.use(xss());
+
+
+// Defined a middleware function to sanitize HTML inputs using xss library
+const sanitizeHTML = (req: Request, res: Response, next: NextFunction) => {
+  if (req.body && typeof req.body === 'object') {
+    // Sanitize each property in req.body
+    for (const key in req.body) {
+      if (Object.prototype.hasOwnProperty.call(req.body, key)) {
+        req.body[key] = xss(req.body[key]); // Sanitize HTML input using xss library
+      }
+    }
+  }
+  next();
+};
+
+// Apply the HTML input sanitization middleware to all routes
+app.use(sanitizeHTML);
+
 
 // Routes
 app.use('/api/v1/auth', authRouter);
