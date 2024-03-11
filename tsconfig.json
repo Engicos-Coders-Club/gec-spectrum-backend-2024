@@ -1,23 +1,23 @@
 {
-    "compilerOptions": {
-      "target": "ES2020", // Compiles to a JavaScript version that supports ES modules natively
-      "module": "ESNext", // Use ESNext as Node.js supports ES Modules
-      "moduleResolution": "node", // Use Node's module resolution algorithm
-      "lib": ["ESNext"], // Include library files for ESNext features
-      "outDir": "./dist", // Output directory for compiled files
-      "rootDir": "./src", // Root directory for source files
-      "strict": true, // Enable all strict type-checking options
-      "esModuleInterop": true, // Enables ES Module interop for importing CommonJS modules
-      "forceConsistentCasingInFileNames": true, // Disallow inconsistently-cased references to the same file.
-      "skipLibCheck": true, // Skip type checking of declaration files.
-      "resolveJsonModule": true, // Allow importing .json files
-      "experimentalDecorators": true, // Enable experimental support for ES decorators
-      "emitDecoratorMetadata": true, // Emit design-type metadata for decorated declarations in source
-      "types": ["node"], // Type definitions to be included
-      "typeRoots": ["./node_modules/@types"], // Folder paths for type definitions
-      "allowJs": true // Allow JavaScript files to be compiled.
-    },
-    "include": ["src/**/*"], // Files to be included in the compilation
-    "exclude": ["node_modules", "dist"] // Folders to be excluded from the compilation
-  }
-  
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "lib": ["ESNext"],
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "types": ["node"],
+    // Ensure typeRoots includes the directory where your custom .d.ts file resides if it's not within the default type lookup paths.
+    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "allowJs": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
