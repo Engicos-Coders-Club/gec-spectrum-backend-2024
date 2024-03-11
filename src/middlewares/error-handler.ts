@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { CustomAPIError } from '../errors';
+import { CustomAPIError } from '../errors/index.js';
 import { StatusCodes } from 'http-status-codes';
 
 const errorHandlerMiddleware = (err: any, req: Request, res: Response, next: NextFunction) => {

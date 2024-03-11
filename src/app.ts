@@ -1,27 +1,28 @@
 import 'dotenv/config'; // ES module syntax for dotenv
 import 'express-async-errors';
-
+config();
 import express from 'express';
 const app = express();
 
 // Connect DB
-import connectDB from './db/connect';
+import connectDB from './db/connect.js';
 
 // Routers
-import authRouter from './routers/auth';
-import departmentRouter from './routers/department';
-import eventRouter from './routers/events';
-import userRouter from './routers/users';
+import authRouter from './routers/auth.js';
+import departmentRouter from './routers/department.js';
+import eventRouter from './routers/events.js';
+import userRouter from './routers/users.js';
 
 // Error handler
-import notFoundMiddleware from './middlewares/not-found';
-import errorHandlerMiddleware from './middlewares/error-handler';
+import notFoundMiddleware from './middlewares/not-found.js';
+import errorHandlerMiddleware from './middlewares/error-handler.js';
 
 // Security packages
 import helmet from 'helmet';
 import cors from 'cors';
 import xss from 'xss-clean';
 import rateLimit from 'express-rate-limit';
+import { config } from 'dotenv';
 
 // JSON parser
 app.use(express.json());
