@@ -2,6 +2,8 @@ import jwt from 'jsonwebtoken';
 import { UnauthenticatedError } from '../errors/index.js';
 import { Request, Response, NextFunction } from 'express';
 
+// This middleware will be for all coordinator request
+
 const authenticationMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -10,8 +12,8 @@ const authenticationMiddleware = async (req: Request, res: Response, next: NextF
     const token = authHeader.split(' ')[1];
     try {
         const payload = jwt.verify(token, process.env.JWT_SECRET as string) as jwt.JwtPayload;
-        const { userId, role, email } = payload;  // destructuring payload data
-        req.user = { userId, role, email }; // passing to req.user as this middleware will pass control to controller function
+        const { userId, department, email } = payload;  // destructuring payload data
+        req.user = { userId, email,department }; // passing to req.user as this middleware will pass control to controller function
     } catch (err) {
         throw new UnauthenticatedError("Not allowed to access this route");
     }

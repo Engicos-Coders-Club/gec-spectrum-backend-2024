@@ -9,7 +9,7 @@ import connectDB from './db/connect.js';
 import authRouter from './routers/auth.js';
 import departmentRouter from './routers/department.js';
 import eventRouter from './routers/events.js';
-import userRouter from './routers/users.js';
+import coordinatorRouter from './routers/coordinator.js';
 
 // Error handler
 import notFoundMiddleware from './middlewares/not-found.js';
@@ -18,11 +18,12 @@ import errorHandlerMiddleware from './middlewares/error-handler.js';
 // Security packages
 import helmet from 'helmet';
 import cors from 'cors';
-import xss from 'xss';
+import xss from 'xss-clean';
 import rateLimit from 'express-rate-limit';
 import { config } from 'dotenv' ;
-import { any, string } from 'joi';
 config();
+import cloudinary from "cloudinary";
+
 // JSON parser
 app.use(express.json());
 app.set('trust proxy', 1);
@@ -61,18 +62,25 @@ const sanitizeHTML = (req: express.Request<{}, {}, RequestBody>, res: Response, 
 
 
 // Apply the HTML input sanitization middleware to all routes
-app.use(sanitizeHTML);
+//app.use(sanitizeHTML);
 
 
 // Routes
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/department', departmentRouter);
 app.use('/api/v1/events', eventRouter);
-app.use('/api/v1/users', userRouter);
+app.use('/api/v1/coordinator', coordinatorRouter);
 
 // Error handler middleware
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
+
+// cloudinary config
+cloudinary.v2.config({
+  cloud_name:process.env.CLOUDINARY_NAME,
+  api_key:process.env.CLOUDINARY_KEY,
+  api_secret:process.env.CLOUDINARY_SECRET,
+})
 
 const port = process.env.PORT || 5000;
 
