@@ -36,10 +36,11 @@ async function sendOtpEmail(to: string, otp: string) {
   }
 }
 
+if (import.meta.url === `file://${process.argv[1]}`) {
 // Example usage
 const recipient = 'recipient.email@example.com';
 const otp = '123456'; // Generate your OTP here
 sendOtpEmail(recipient, otp).catch(console.error);
-
+}
 
 export  { sendOtpEmail }
