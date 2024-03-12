@@ -18,7 +18,7 @@ import errorHandlerMiddleware from './middlewares/error-handler.js';
 // Security packages
 import helmet from 'helmet';
 import cors from 'cors';
-import xss from 'xss-clean';
+import xss from 'xss';
 import rateLimit from 'express-rate-limit';
 import { config } from 'dotenv' ;
 config();
