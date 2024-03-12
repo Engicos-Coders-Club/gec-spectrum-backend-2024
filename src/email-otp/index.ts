@@ -1,2 +1,2 @@
-import { sendOtpEmail } from "./gmail-api"
+import { sendOtpEmail } from "./gmail-api.js"
 export  { sendOtpEmail }

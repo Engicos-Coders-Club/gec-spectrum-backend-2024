@@ -1,10 +1,23 @@
 import nodemailer from 'nodemailer';
-
+import { google } from 'googleapis';
+import { config } from 'dotenv';
 // Replace these with your own values
-const CLIENT_ID = 'YOUR_CLIENT_ID';
-const CLIENT_SECRET = 'YOUR_CLIENT_SECRET';
-const REFRESH_TOKEN = 'YOUR_REFRESH_TOKEN';
-const SENDER_EMAIL = 'your.email@example.com';
+config();
+
+const CLIENT_ID = process.env.GMAIL_CLIENT_ID;
+const CLIENT_SECRET = process.env.GMAIL_CLIENT_SECRET;
+const REFRESH_TOKEN = process.env.GMAIL_REFRESH_TOKEN;
+const SENDER_EMAIL = process.env.GMAIL_SENDER_EMAIL;
+
+const REDIRECT_URI = 'https://developers.google.com/oauthplayground';
+
+const oAuth2Client = new google.auth.OAuth2(
+  CLIENT_ID,
+  CLIENT_SECRET,
+  REDIRECT_URI
+);
+oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
+
 
 async function sendOtpEmail(to: string, otp: string) {
   const transporter = nodemailer.createTransport({
@@ -23,7 +36,7 @@ async function sendOtpEmail(to: string, otp: string) {
     to: to,
     subject: 'Your OTP',
     text: `Your OTP is: ${otp}`,
-    // You can also use HTML content
+    html: '<h1>Hello from gmail email using API</h1>', // You can also use HTML content
   };
 
   try {
@@ -38,9 +51,10 @@ async function sendOtpEmail(to: string, otp: string) {
 
 if (import.meta.url === `file://${process.argv[1]}`) {
 // Example usage
-const recipient = 'recipient.email@example.com';
+const recipient = '264sideemail@gmail.com';
 const otp = '123456'; // Generate your OTP here
 sendOtpEmail(recipient, otp).catch(console.error);
+
 }
 
 export  { sendOtpEmail }

@@ -2,8 +2,6 @@ import express from 'express';
 //import User from '../models/User.js';
 import { sendOtpEmail } from '../email-otp/index.js';
 import bcrypt from 'bcryptjs';
-import nodemailer from 'nodemailer';
-
 const router = express.Router();
 
 function generateOtp(): string {
@@ -20,8 +18,8 @@ router.post('/register', async (req, res) => {
   const otp = generateOtp(); // Implement this function
   const otpHash = await bcrypt.hash(otp, 10);
 
-  const user = new User({ email, otpHash });
-  await user.save();
+  // const user = new User({ email, otpHash });
+  // await user.save();
 
   sendOtpEmail(email, otp); // Implement this function
 
