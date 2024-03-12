@@ -28,7 +28,7 @@ const coordinatorSchema = new mongoose.Schema<ICoordinator>({
             /^\d{10}$/,
             'Please provide a valid 10-digit contact number'
         ],
-        unique:true
+        unique:true // incase we need to search when email is not known
     },
     department:{
         type:mongoose.Schema.Types.ObjectId
