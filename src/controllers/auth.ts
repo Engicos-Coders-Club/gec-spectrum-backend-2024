@@ -67,10 +67,14 @@ export const sendOtp = async(req:Request,res:Response)=>{
     const { email } = req.body;
     const otp = generateOtp(); 
 
-    sendOtpEmail(email, otp); // Implement this function
-    await Participants.create({email,otp});
-    
-    
+    const temp = await Participants.find({email:email})
+    if(temp.length > 0){
+        sendOtpEmail(email,otp)
+        await Participants.findOneAndUpdate({email},{otp:otp});
+    }else{
+        sendOtpEmail(email, otp); // Implement this function
+        await Participants.create({email,otp});
+    }
     res.status(StatusCodes.OK).json({msg:"OTP sent"});
 }
 
