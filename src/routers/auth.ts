@@ -2,6 +2,9 @@ import express from 'express';
 //import User from '../models/User.js';
 import { sendOtpEmail } from '../email-otp/index.js';
 import bcrypt from 'bcryptjs';
+import { registerCoordinator,loginCoordinator,loginAdmin } from '../controllers/auth.js';
+import adminAuthenticationMiddleware from '../middlewares/admin-authentication.js';
+
 const router = express.Router();
 
 function generateOtp(): string {
@@ -27,8 +30,6 @@ router.post('/register', async (req, res) => {
 });
 
 // Add other endpoints here
-import { registerCoordinator,loginCoordinator,loginAdmin } from '../controllers/auth.js';
-import adminAuthenticationMiddleware from '../middlewares/admin-authentication.js';
 
 router.route('/register-coordinator').post(adminAuthenticationMiddleware,registerCoordinator)
 
