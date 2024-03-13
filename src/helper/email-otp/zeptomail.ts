@@ -23,7 +23,7 @@ async function sendOtpEmail(email: string, otp: string, name: string = "") {
         }
     ],
     "subject": `Hello${name ? ' ' + name : ''} Your OTP`,
-    "htmlbody": "<div><b> Test email sent successfully.</b></div>",
+    "htmlbody": `<div><b> Your OTP is ${otp}.</b></div>`,
 }).then((resp: any) => console.log("success")).catch((error: any) => console.log("error"));
 }
 

@@ -1,13 +1,18 @@
 import { Coordinator } from '../models/Coordinator.js';
 import { Department } from '../models/Department.js';
+import { Participants } from '../models/Participant.js';
 import {StatusCodes} from 'http-status-codes'
 import {BadRequestError,NotFoundError,UnauthenticatedError} from '../errors/index.js'
 import { Request, Response} from 'express';
 import jwt from 'jsonwebtoken'
+import { sendOtpEmail } from '../helper/email-otp/index.js';
+import { generateOtp } from '../helper/otpGenerator.js';
 import { config } from 'dotenv';
 config();
 
 
+
+  
 export const registerCoordinator = async(req:Request,res:Response)=>{
     const {email,contact,department} = req.body
 
@@ -55,4 +60,31 @@ export const loginAdmin = async(req:Request,res:Response)=>{
         throw new NotFoundError(".env file not found")
     
     res.status(StatusCodes.OK).json({token});
+}
+
+export const sendOtp = async(req:Request,res:Response)=>{
+
+    const { email } = req.body;
+    const otp = generateOtp(); 
+
+    sendOtpEmail(email, otp); // Implement this function
+    await Participants.create({email,otp});
+    
+    
+    res.status(StatusCodes.OK).json({msg:"OTP sent"});
+}
+
+export const verifyOtp = async(req:Request,res:Response)=>{
+
+    const { email, otp } = req.body;
+    const participant = await Participants.findOne({email});
+    if(!participant)
+    throw new NotFoundError("Invalid email")
+    
+    if(participant.otp !== otp)
+    throw new UnauthenticatedError("Invalid OTP")
+
+    await Participants.findOneAndUpdate({email},{verified:true});
+    
+    res.status(StatusCodes.OK).json({msg:"OTP verified"});
 }
