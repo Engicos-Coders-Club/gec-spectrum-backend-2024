@@ -24,7 +24,7 @@ const errorHandlerMiddleware = (err: any, req: Request, res: Response, next: Nex
   }
   // Mongoose duplicate key error
   if (err.code === 11000) {
-    return res.status(400).json({ "name": err.name, "message": "User already exists" });
+    return res.status(400).json({ "name": err.name, "message": "User already exists",key:err?.keyValue });
   }
 
   return res.status(customError.statusCode).json({ msg: customError.msg });
