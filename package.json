@@ -37,9 +37,10 @@
         "joi": "^17.9.2",
         "jsonwebtoken": "^9.0.2",
         "mongoose": "^8.2.1",
-        "nodemailer": "^6.9.12",
         "multer": "^1.4.5-lts.1",
+        "nodemailer": "^6.9.12",
         "rate-limiter": "^0.2.0",
+        "razorpay": "^2.9.2",
         "swagger-ui-express": "^4.6.2",
         "zeptomail": "^6.0.0"
     },
