@@ -19,6 +19,7 @@ const RuleSchema = new Schema({
 // Main Event schema
 const EventSchema = new Schema({
     eventName: { type: String, required: true },
+    fee:{type:Number,required:true,default:0},
     imageURL:{type:String,default:""},
     introduction:{type:String,required:true},
     departmentId:{type:String,required:true},
@@ -38,6 +39,7 @@ const EventSchema = new Schema({
 interface IEvent extends Document {
     eventName: string;
     imageURL:string;
+    fee:number;
     introduction:string;
     departmentId:string;
     prices: {
