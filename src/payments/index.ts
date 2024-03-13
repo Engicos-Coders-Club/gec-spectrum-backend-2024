@@ -1,3 +1,3 @@
-import { createPayment, verifyPayment } from "./razorpay.js";
+import { createPayment, verifyPaymentSignature } from "./razorpay.js";
 
-export { createPayment, verifyPayment };
+export { createPayment, verifyPaymentSignature };

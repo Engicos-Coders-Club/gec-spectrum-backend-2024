@@ -4,13 +4,13 @@ import { config } from 'dotenv';
 config();
 
 const razorpay = new Razorpay({
-  key_id: 'YOUR_KEY_ID',
-  key_secret: 'YOUR_SECRET'
+  key_id: process.env.RAZORPAY_KEY_ID || 'YOUR_KEY_ID',
+  key_secret: process.env.RAZORPAY_KEY_SECRET || 'YOUR_KEY_SECRET',
 });
 
-export const createPayment = async () => {
+export const createPayment = async ( amount:number ) => {
   const options = {
-    amount: 50000, // amount in the smallest currency unit
+    amount: amount, // amount in the smallest currency unit
     currency: "INR",
     receipt: "order_rcptid_11"
   };
@@ -26,7 +26,7 @@ export const createPayment = async () => {
 };
 
 
-export const verifyPayment = (
+export const verifyPaymentSignature = (
     orderId: string,
     paymentId: string,
     razorpaySignature: string,
@@ -37,3 +37,10 @@ export const verifyPayment = (
     const generatedSignature = hmac.digest('hex');
     return generatedSignature === razorpaySignature;
   };
+
+if (import.meta.url === `file://${process.argv[1]}`) { // will only run when the file is individually executed, not when imported
+
+//Example usage
+// const payment = createPayment(100).catch(console.error);
+
+}

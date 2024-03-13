@@ -1,6 +1,6 @@
 import express from 'express';
 //import User from '../models/User.js';
-import { registerCoordinator,loginCoordinator,loginAdmin, sendOtp, verifyOtp } from '../controllers/auth.js';
+import { registerCoordinator,loginCoordinator,loginAdmin, sendOtp, verifyOtp, verifyPayment } from '../controllers/auth.js';
 import adminAuthenticationMiddleware from '../middlewares/admin-authentication.js';
 
 const router = express.Router();
@@ -18,5 +18,8 @@ router.route('/register-coordinator').post(adminAuthenticationMiddleware,registe
 
 router.route('/login-coordinator').post(loginCoordinator)
 router.route('/login-admin').post(loginAdmin)
+
+
+router.route('/payment/success').post(verifyPayment)
 
 export default router;
