@@ -24,7 +24,7 @@ async function sendOtpEmail(email: string, otp: string, name: string = "") {
     ],
     "subject": `Hello${name ? ' ' + name : ''} Your OTP`,
     "htmlbody": `<div><b> Your OTP is ${otp}.</b></div>`,
-}).then((resp: any) => console.log("success")).catch((error: any) => console.log("error"));
+}).then((resp: any) => console.log("success")).catch((error: any) => console.log("email sender error"));
 }
 
 //if (import.meta.url === `file://${process.argv[1]}`) { // will only run when the file is individually executed, not when imported

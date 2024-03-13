@@ -1,7 +1,4 @@
 import mongoose from 'mongoose';
-import jwt from 'jsonwebtoken'
-import { config } from 'dotenv';
-config();
 
 interface IParticipants extends mongoose.Document {
     email: string;
@@ -29,7 +26,8 @@ const participantSchema = new mongoose.Schema<IParticipants>({
             /^\d{10}$/,
             'Please provide a valid 10-digit contact number'
         ],
-        unique:true // incase we need to search when email is not known
+        default:"",
+        unique:false
     },
     verified:{type: Boolean, default : false},
     events:[{  
