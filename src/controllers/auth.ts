@@ -5,7 +5,7 @@ import {StatusCodes} from 'http-status-codes'
 import {BadRequestError,NotFoundError,UnauthenticatedError} from '../errors/index.js'
 import { Request, Response} from 'express';
 import jwt from 'jsonwebtoken'
-import { sendOtpEmail } from '../email-otp/index.js';
+import { sendOtpEmail } from '../helper/email-otp/index.js';
 import { generateOtp } from '../helper/otpGenerator.js';
 import { config } from 'dotenv';
 config();
