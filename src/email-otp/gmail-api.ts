@@ -19,7 +19,7 @@ const oAuth2Client = new google.auth.OAuth2(
 oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
 
 
-async function sendOtpEmail(to: string, otp: string) {
+async function sendOtpEmail(to: string, otp: string, name: string = "") {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -34,7 +34,7 @@ async function sendOtpEmail(to: string, otp: string) {
   const mailOptions = {
     from: SENDER_EMAIL,
     to: to,
-    subject: 'Your OTP',
+    subject: `Hello ${name}!`,
     text: `Your OTP is: ${otp}`,
     html: '<h1>Hello from gmail email using API</h1>', // You can also use HTML content
   };
@@ -49,12 +49,12 @@ async function sendOtpEmail(to: string, otp: string) {
   }
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+//if (import.meta.url === `file://${process.argv[1]}`) { // will only run when the file is individually executed, not when imported
 // Example usage
-const recipient = '264sideemail@gmail.com';
-const otp = '123456'; // Generate your OTP here
-sendOtpEmail(recipient, otp).catch(console.error);
+//const recipient = '264sideemail@gmail.com';
+//const otp = '123456'; // Generate your OTP here
+//sendOtpEmail(recipient, otp).catch(console.error);
 
-}
+//}
 
 export  { sendOtpEmail }
