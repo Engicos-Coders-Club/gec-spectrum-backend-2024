@@ -18,11 +18,12 @@ import errorHandlerMiddleware from './middlewares/error-handler.js';
 // Security packages
 import helmet from 'helmet';
 import cors from 'cors';
-import xss from 'xss';
 import rateLimit from 'express-rate-limit';
 import { config } from 'dotenv' ;
-config();
 import cloudinary from "cloudinary";
+
+
+config(); // for dotenv
 
 // JSON parser
 app.use(express.json());
@@ -42,22 +43,6 @@ app.use(cors());
 
 
 // Define an interface for the request body
-interface RequestBody {
-  [key: string]: string; // Assuming all properties are strings for simplicity
-}
-
-// Define a middleware function to sanitize HTML inputs using xss library
-const sanitizeHTML = (req: express.Request<{}, {}, RequestBody>, res: Response, next: NextFunction) => {
-  if (req.body && typeof req.body === 'object') {
-    // Sanitize each property in req.body
-    for (const key in req.body) {
-      if (Object.prototype.hasOwnProperty.call(req.body, key)) {
-        req.body[key] = xss(req.body[key]); // Sanitize HTML input using xss library
-      }
-    }
-  }
-  next();
-};
 
 
 
