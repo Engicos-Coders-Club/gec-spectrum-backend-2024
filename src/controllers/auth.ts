@@ -109,7 +109,7 @@ export const verifyPayment = async(req:Request,res:Response)=>{
         //sucess
     
     } else {
-    
+        throw new UnauthenticatedError("Invalid Signature")
         // Payment verification failed
     
     }
