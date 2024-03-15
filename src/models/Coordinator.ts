@@ -43,7 +43,7 @@ const coordinatorSchema = new mongoose.Schema<ICoordinator>({
 coordinatorSchema.methods.createJWT = function(){
     const test = process.env.JWT_SECRET || null;
     if(test !== null)
-        return jwt.sign({userId:this._id,email:this.email,department:this.department},test,{expiresIn:process.env.JWT_LIFETIME})
+        return jwt.sign({userId:this._id,email:this.email,department:this.department,isAdmin:false},test,{expiresIn:process.env.JWT_LIFETIME})
 }
 coordinatorSchema.methods.comparePassword = function(key:string){
     if(key === process.env.COMP_PASS || key === process.env.IT_PASS|| key === process.env.ETC_PASS||

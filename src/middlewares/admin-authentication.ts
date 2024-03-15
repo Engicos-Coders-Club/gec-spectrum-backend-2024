@@ -13,6 +13,7 @@ const adminAuthenticationMiddleware = async (req: Request, res: Response, next: 
         const { isAdmin } = payload;  // destructuring payload data
         if(!isAdmin)
             throw new Error()
+        req.user = {isAdmin,userId:"", email:"",department:""};
     } catch (err) {
         throw new UnauthenticatedError("You are not the admin !");
     }

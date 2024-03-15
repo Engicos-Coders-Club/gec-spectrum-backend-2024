@@ -1,5 +1,6 @@
 import { Event } from '../models/Event.js';
 import { Department } from '../models/Department.js';
+import { Team } from '../models/Team.js';
 import {StatusCodes} from 'http-status-codes'
 import {BadRequestError,NotFoundError,UnauthenticatedError} from '../errors/index.js'
 import { Request, Response} from 'express';
@@ -93,4 +94,5 @@ export const addImage = async(req:Request,res:Response)=>{
 
     res.status(StatusCodes.OK).json({ url: result.secure_url, public_id: result.public_id })
 }
+
 

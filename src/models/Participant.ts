@@ -1,16 +1,22 @@
 import mongoose from 'mongoose';
 
 interface IParticipants extends mongoose.Document {
+    name:string;
     email: string;
     contact: string;
     department: mongoose.Schema.Types.ObjectId;
     events: mongoose.Schema.Types.ObjectId[];
     verified: boolean;
     otp: string;
+    idcard:string;
     checkOtp(key: number): boolean;
 }
 
 const participantSchema = new mongoose.Schema<IParticipants>({
+    name:{
+        type:String,
+        required:[true,'please provide email']
+    },
     email:{
         type:String,
         required:[true,'please provide email'],
@@ -35,6 +41,7 @@ const participantSchema = new mongoose.Schema<IParticipants>({
         default:[]
     }],
     otp:{type: String},
+    idcard:{type:String,default:""}
 })
 
 // mongoose schema instance methods

@@ -12,8 +12,8 @@ const authenticationMiddleware = async (req: Request, res: Response, next: NextF
     const token = authHeader.split(' ')[1];
     try {
         const payload = jwt.verify(token, process.env.JWT_SECRET as string) as jwt.JwtPayload;
-        const { userId, department, email } = payload;  // destructuring payload data
-        req.user = { userId, email,department }; // passing to req.user as this middleware will pass control to controller function
+        const { userId, department, email,isAdmin } = payload;  // destructuring payload data
+        req.user = { userId, email,department,isAdmin }; // passing to req.user as this middleware will pass control to controller function
     } catch (err) {
         throw new UnauthenticatedError("Not allowed to access this route");
     }

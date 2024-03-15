@@ -10,6 +10,7 @@ import authRouter from './routers/auth.js';
 import departmentRouter from './routers/department.js';
 import eventRouter from './routers/events.js';
 import coordinatorRouter from './routers/coordinator.js';
+import paymentRouter from './routers/payments.js';
 
 // Error handler
 import notFoundMiddleware from './middlewares/not-found.js';
@@ -26,7 +27,7 @@ import cloudinary from "cloudinary";
 config(); // for dotenv
 
 // JSON parser
-app.use(express.json());
+app.use(express.json({limit: '50mb'}));
 app.set('trust proxy', 1);
 
 app.use(
@@ -55,6 +56,7 @@ app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/department', departmentRouter);
 app.use('/api/v1/events', eventRouter);
 app.use('/api/v1/coordinator', coordinatorRouter);
+app.use('/api/v1/payments',paymentRouter)
 
 // Error handler middleware
 app.use(notFoundMiddleware);
