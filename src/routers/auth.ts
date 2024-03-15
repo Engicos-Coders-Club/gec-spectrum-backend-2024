@@ -19,4 +19,7 @@ router.route('/register-coordinator').post(adminAuthenticationMiddleware,registe
 router.route('/login-coordinator').post(loginCoordinator)
 router.route('/login-admin').post(loginAdmin)
 
+
+
+
 export default router;

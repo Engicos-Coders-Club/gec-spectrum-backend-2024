@@ -1,7 +1,9 @@
 import { Coordinator } from '../models/Coordinator.js';
 import { Department } from '../models/Department.js';
 import { Participants } from '../models/Participant.js';
+import { Team } from '../models/Team.js';
 import {StatusCodes} from 'http-status-codes'
+import { verifyPaymentSignature } from '../payments/index.js';
 import {BadRequestError,NotFoundError,UnauthenticatedError} from '../errors/index.js'
 import { Request, Response} from 'express';
 import jwt from 'jsonwebtoken'
@@ -64,7 +66,7 @@ export const loginAdmin = async(req:Request,res:Response)=>{
 
 export const sendOtp = async(req:Request,res:Response)=>{
 
-    const { email } = req.body;
+    const { email, contact } = req.body;
     const otp = generateOtp(); 
 
     const temp = await Participants.find({email:email})
@@ -73,7 +75,7 @@ export const sendOtp = async(req:Request,res:Response)=>{
         await Participants.findOneAndUpdate({email},{otp:otp});
     }else{
         sendOtpEmail(email, otp); // Implement this function
-        await Participants.create({email,otp});
+        await Participants.create({email,contact,otp});
     }
     res.status(StatusCodes.OK).json({msg:"OTP sent"});
 }
@@ -92,3 +94,5 @@ export const verifyOtp = async(req:Request,res:Response)=>{
     
     res.status(StatusCodes.OK).json({msg:"OTP verified"});
 }
+
+
