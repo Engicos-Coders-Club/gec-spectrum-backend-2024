@@ -29,6 +29,7 @@ const EventSchema = new Schema({
     },
     date: { type: Date, required: true },
     teamSize: { type: Number, required: true },
+    participationLimit:{type:Number,default:-1}, // -1 implies no limit
     contact: {
         coordinators: { type: [CoordinatorSchema], required: true }
     },
@@ -48,6 +49,7 @@ interface IEvent extends Document {
     };
     date: Date;
     teamSize: number;
+    participationLimit:number;
     contact: {
         coordinators: {
             name: string;

@@ -1,7 +1,7 @@
 import { Event } from '../models/Event.js';
 import { Department } from '../models/Department.js';
 import {StatusCodes} from 'http-status-codes'
-import {BadRequestError,NotFoundError,UnauthenticatedError} from '../errors/index.js'
+import {BadRequestError,CustomAPIError,NotFoundError,UnauthenticatedError} from '../errors/index.js'
 import { Request, Response} from 'express';
 import { Participants } from '../models/Participant.js';
 import { Team } from '../models/Team.js';
@@ -21,6 +21,13 @@ export const createTeam = async(req:Request,res:Response)=>{
     const event = await Event.findOne({_id:eventId})
     if(!event)
         throw new NotFoundError(`No event with id ${eventId}`)
+
+    const limit = event.participationLimit
+    if(limit != -1){
+        const entries = await Team.find({eventId:eventId})
+        if(entries.length >= limit)
+            throw new CustomAPIError("Participation limit reached",StatusCodes.FORBIDDEN);
+    }
 
     if(event.teamSize != participants.length)
         throw new BadRequestError("'participants' must be equal to team size for event")
