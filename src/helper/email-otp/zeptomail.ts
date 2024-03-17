@@ -7,7 +7,8 @@ const token: string = process.env.ZEPTO_MAIL_TOKEN || "";
 let client: SendMailClient = new SendMailClient({ url, token });
 
 
-async function sendOtpEmail(email: string, otp: string, name: string = "") {
+async function sendOtpEmail(email: string, otp: string, name: string = "", message: string = "") {
+
 
  client.sendMail({
     "from": {
@@ -23,7 +24,7 @@ async function sendOtpEmail(email: string, otp: string, name: string = "") {
         }
     ],
     "subject": `Hello${name ? ' ' + name : ''} Your OTP`,
-    "htmlbody": `<div><b> Your OTP is ${otp}.</b></div>`,
+    "htmlbody": `<div><b>${message ? message + '\n' : '' } Your OTP is ${otp}.</b></div>`,
 }).then((resp: any) => console.log("success")).catch((error: any) => console.log("email sender error"));
 }
 
