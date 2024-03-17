@@ -33,30 +33,30 @@ app.set('trust proxy', 1);
 app.use(
   rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // limit each IP to 100 requests per window
+    max: 1000, // limit each IP to 100 requests per window
     standardHeaders: true, // Return rate limit info in the RateLimit-* headers
     legacyHeaders: false, // Disable the X-RateLimit-* headers
   })
 );
 
 app.use(helmet());
-// app.use(cors({
-//   origin: ["http://localhost:3000","https://www.gecspectrum.com","https://gec-spectrum-website-2024-git-main-gec-coders-clubs-projects.vercel.app"],
-//   methods: ["GET", "POST", "PATCH", "DELETE"],
-// }));
+app.use(cors({
+  origin: ["http://localhost:3000","https://www.gecspectrum.com","https://gec-spectrum-website-2024-git-main-gec-coders-clubs-projects.vercel.app"],
+  methods: ["GET", "POST", "PATCH", "DELETE"],
+}));
 
-app.use(function(req, res, next) {
-  const allowedOrigins = ['http://localhost:3000', 'https://www.gecspectrum.com', 'https://gec-spectrum-website-2024-git-main-gec-coders-clubs-projects.vercel.app'];
-  const origin = req.headers.origin;
-  if(origin){
-    if (allowedOrigins.includes(origin)) {
-      res.setHeader('Access-Control-Allow-Origin', origin);
-    }
-  }
-  res.header('Access-Control-Allow-Methods','POST, GET, PATCH, DELETE') 
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  next();
-});
+// app.use(function(req, res, next) {
+//   const allowedOrigins = ['http://localhost:3000', 'https://www.gecspectrum.com', 'https://gec-spectrum-website-2024-git-main-gec-coders-clubs-projects.vercel.app'];
+//   const origin = req.headers.origin;
+//   if(origin){
+//     if (allowedOrigins.includes(origin)) {
+//       res.setHeader('Access-Control-Allow-Origin', origin);
+//     }
+//   }
+//   res.header('Access-Control-Allow-Methods','POST, GET, PATCH, DELETE') 
+//   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+//   next();
+// });
 
 
 // Define an interface for the request body
