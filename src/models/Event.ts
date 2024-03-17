@@ -28,13 +28,17 @@ const EventSchema = new Schema({
         secondPlace: { type: Number, required: true }
     },
     date: { type: Date, required: true },
-    teamSize: { type: Number, required: true },
+    teamSize: {
+        min: { type: Number, required: true },
+        max: { type: Number, required: true } 
+    },
     participationLimit:{type:Number,default:-1}, // -1 implies no limit
     contact: {
         coordinators: { type: [CoordinatorSchema], required: true }
     },
     rulesAndRegulations: { type: [RuleSchema], required: true },
     duration:{type:String,required:true},
+    rulebook:{type:String,default:""}
 });
 
 // Define the interface for Event document
@@ -49,7 +53,10 @@ interface IEvent extends Document {
         secondPlace: number;
     };
     date: Date;
-    teamSize: number;
+    teamSize:{
+        min: number;
+        max: number;
+    };
     participationLimit:number;
     contact: {
         coordinators: {
@@ -62,6 +69,7 @@ interface IEvent extends Document {
         points: string[];
     }[];
     duration:string;
+    rulebook:string;
 }
 
 // Create and export the Event model

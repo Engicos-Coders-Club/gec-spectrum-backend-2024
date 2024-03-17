@@ -17,7 +17,7 @@ interface EventInfo {
 }
 
 export const addEvent = async(req:Request,res:Response)=>{
-    const {eventName,fee,introduction,prices,date,teamSize,contact,rulesAndRegulations,departmentId,duration} = req.body
+    const {eventName,fee,introduction,prices,date,teamSize,contact,rulesAndRegulations,departmentId,duration,rulebook} = req.body
 
     if(!eventName || !introduction || !prices || !date || !teamSize || !contact || !rulesAndRegulations || !departmentId || !fee || !duration)
         throw new BadRequestError("All event fields were not provided")
