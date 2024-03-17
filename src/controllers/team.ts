@@ -30,7 +30,7 @@ export const createTeam = async(req:Request,res:Response)=>{
             throw new CustomAPIError("Participation limit reached",StatusCodes.FORBIDDEN);
     }
 
-    if(!(event.teamSize.max<=participants.length && participants.length>=event.teamSize.min))
+    if(event.teamSize.max < participants.length && participants.length < event.teamSize.min)
         throw new BadRequestError(`Invalid number of participants, Max:${event.teamSize.max}, Min:${event.teamSize.min}`);
 
     const emails = participants.map((participant:participantInfo) => participant.email);
