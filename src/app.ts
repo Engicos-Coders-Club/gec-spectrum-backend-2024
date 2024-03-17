@@ -40,7 +40,10 @@ app.use(
 );
 
 app.use(helmet());
-app.use(cors());
+app.use(cors({
+  origin: ["http://localhost:3000","https://www.gecspectrum.com","https://gec-spectrum-website-2024-git-main-gec-coders-clubs-projects.vercel.app"],
+  methods: ["GET", "POST", "PATCH", "DELETE"],
+}));
 
 
 // Define an interface for the request body
