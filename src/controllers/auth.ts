@@ -66,15 +66,15 @@ export const loginAdmin = async(req:Request,res:Response)=>{
 
 export const sendOtp = async(req:Request,res:Response)=>{
 
-    const { email, contact } = req.body;
+    const { email, contact, message } = req.body;
     const otp = generateOtp(); 
 
     const temp = await Participants.find({email:email})
     if(temp.length > 0){
-        sendOtpEmail(email,otp)
+        sendOtpEmail(email,otp, message)
         await Participants.findOneAndUpdate({email},{otp:otp});
     }else{
-        sendOtpEmail(email, otp); // Implement this function
+        sendOtpEmail(email, otp, message); // Implement this function
         await Participants.create({email,contact,otp});
     }
     res.status(StatusCodes.OK).json({msg:"OTP sent"});
