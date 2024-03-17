@@ -33,7 +33,8 @@ const EventSchema = new Schema({
     contact: {
         coordinators: { type: [CoordinatorSchema], required: true }
     },
-    rulesAndRegulations: { type: [RuleSchema], required: true }
+    rulesAndRegulations: { type: [RuleSchema], required: true },
+    duration:{type:String,required:true},
 });
 
 // Define the interface for Event document
@@ -60,6 +61,7 @@ interface IEvent extends Document {
         topic: string;
         points: string[];
     }[];
+    duration:string;
 }
 
 // Create and export the Event model
