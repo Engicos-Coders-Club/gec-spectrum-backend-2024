@@ -45,8 +45,8 @@ export const createTeam = async(req:Request,res:Response)=>{
 
         const temp = await Participants.find({email:ele.email})
         if(temp.length == 0){
-            //const result = await cloudinary.v2.uploader.upload(ele.idcard, { resource_type: "image" });
-            await Participants.create({email:ele.email,name:ele.name,idcard:"",contact:ele.contact,college:ele.college})
+            const result = await cloudinary.v2.uploader.upload(ele.idcard, { resource_type: "image" });
+            await Participants.create({email:ele.email,name:ele.name,idcard:result.secure_url,contact:ele.contact,college:ele.college})
         }
         await Participants.findOneAndUpdate({email:ele.email},{ $push: { events: eventId } })
     })
