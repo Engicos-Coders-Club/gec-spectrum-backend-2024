@@ -32,8 +32,8 @@ app.set('trust proxy', 1);
 
 app.use(
   rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 1000, // limit each IP to 100 requests per window
+    windowMs: 5 * 60 * 1000, // 5 minutes
+    max: 1000, // limit each IP to 1000 requests per window
     standardHeaders: true, // Return rate limit info in the RateLimit-* headers
     legacyHeaders: false, // Disable the X-RateLimit-* headers
   })
@@ -44,28 +44,6 @@ app.use(cors({
   origin: ["http://localhost:3000","https://www.gecspectrum.com","https://gec-spectrum-website-2024-git-main-gec-coders-clubs-projects.vercel.app"],
   methods: ["GET", "POST", "PATCH", "DELETE"],
 }));
-
-// app.use(function(req, res, next) {
-//   const allowedOrigins = ['http://localhost:3000', 'https://www.gecspectrum.com', 'https://gec-spectrum-website-2024-git-main-gec-coders-clubs-projects.vercel.app'];
-//   const origin = req.headers.origin;
-//   if(origin){
-//     if (allowedOrigins.includes(origin)) {
-//       res.setHeader('Access-Control-Allow-Origin', origin);
-//     }
-//   }
-//   res.header('Access-Control-Allow-Methods','POST, GET, PATCH, DELETE') 
-//   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-//   next();
-// });
-
-
-// Define an interface for the request body
-
-
-
-// Apply the HTML input sanitization middleware to all routes
-//app.use(sanitizeHTML);
-
 
 // Routes
 app.use('/api/v1/auth', authRouter);
