@@ -1,4 +1,4 @@
-    const departments: {[key:string]:string} = 
+export const departmentNameById: {[key:string]:string} = 
     {
         
             "65eed7ed2378ad4bb65db272" : "Information Technology Engineering",
@@ -15,10 +15,4 @@
  
             "65eed84d2378ad4bb65db27e": "VLSI Engineering",
     }
-        
-
-    // Function to retrieve the department name by _id
-export function getDepartmentNameById(id:string) {
-    return departments[id];
-}
 
