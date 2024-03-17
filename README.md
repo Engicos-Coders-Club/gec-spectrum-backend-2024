@@ -2,14 +2,14 @@
 Backend server for Spectrum 2024
 
 
-Will be deployed as a docker container on [fl0.com](https://www.fl0.com/)
+Deployed with docker on [fl0.com](https://www.fl0.com/)
 
 ### To run locally
 
 #### (In root directory)
-```docker pull thunderblade03/spectrum-backend-2024```
+```docker pull thunderblade03/spectrum-backend-2024:0.0.1.RELEASE```
 
-```docker run -p 5000:5000 spectrum-backend-2024```
+```docker run -p 5000:5000 spectrum-backend-2024:0.0.1.RELEASE```
 
 ## Postman Link
 

@@ -1,7 +1,7 @@
 import { Event } from '../models/Event.js';
 import { Department } from '../models/Department.js';
 import {StatusCodes} from 'http-status-codes'
-import {BadRequestError,NotFoundError,UnauthenticatedError} from '../errors/index.js'
+import {BadRequestError,CustomAPIError,NotFoundError,UnauthenticatedError} from '../errors/index.js'
 import { Request, Response} from 'express';
 import { Participants } from '../models/Participant.js';
 import { Team } from '../models/Team.js';
@@ -11,6 +11,7 @@ interface participantInfo{
     email:string
     name:string
     contact:string
+    college:string
     idcard:string
 }
 export const createTeam = async(req:Request,res:Response)=>{
@@ -22,8 +23,16 @@ export const createTeam = async(req:Request,res:Response)=>{
     if(!event)
         throw new NotFoundError(`No event with id ${eventId}`)
 
-    if(event.teamSize != participants.length)
-        throw new BadRequestError("'participants' must be equal to team size for event")
+    const limit = event.participationLimit
+    if(limit != -1){
+        const entries = await Team.find({eventId:eventId})
+        if(entries.length >= limit)
+            throw new CustomAPIError("Participation limit reached",StatusCodes.FORBIDDEN);
+    }
+
+    if(participants.length<=event.teamSize.max && participants.length>=event.teamSize.min){}
+    else
+        throw new BadRequestError("Invalid number of participants")
 
     const emails = participants.map((participant:participantInfo) => participant.email);
     if(!emails.includes(leader))
@@ -31,14 +40,14 @@ export const createTeam = async(req:Request,res:Response)=>{
 
     participants.forEach(async(ele:participantInfo)=>{
         if(!ele.email || !ele.name || !ele.contact ||!ele.idcard)
-            throw new BadRequestError("'email' 'name' 'contact' 'idcard' cannot be empty inside participants")
+            throw new BadRequestError("'email' 'name' 'contact' 'idcard' 'college' cannot be empty inside participants")
         if(!ele.idcard.startsWith('data:image/'))
             throw new BadRequestError('idcard must be base64 encoded')
 
         const temp = await Participants.find({email:ele.email})
         if(temp.length == 0){
             const result = await cloudinary.v2.uploader.upload(ele.idcard, { resource_type: "image" });
-            await Participants.create({email:ele.email,name:ele.name,idcard:result.secure_url,contact:ele.contact})
+            await Participants.create({email:ele.email,name:ele.name,idcard:result.secure_url,contact:ele.contact,college:ele.college})
         }
         await Participants.findOneAndUpdate({email:ele.email},{ $push: { events: eventId } })
     })

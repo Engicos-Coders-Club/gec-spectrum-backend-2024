@@ -5,19 +5,21 @@ import {StatusCodes} from 'http-status-codes'
 import {BadRequestError,NotFoundError,UnauthenticatedError} from '../errors/index.js'
 import { Request, Response} from 'express';
 import cloudinary from "cloudinary";
+import { getDepartmentNameById } from '../helper/utils.js';
 
 interface EventInfo {
     eventId:string;
     eventName: string;
     date: Date;
     department: string;
+    deptName:string;
     imageUrl:string;
 }
 
 export const addEvent = async(req:Request,res:Response)=>{
-    const {eventName,fee,introduction,prices,date,teamSize,contact,rulesAndRegulations,departmentId} = req.body
+    const {eventName,fee,introduction,prices,date,teamSize,contact,rulesAndRegulations,departmentId,duration,rulebook} = req.body
 
-    if(!eventName || !introduction || !prices || !date || !teamSize || !contact || !rulesAndRegulations || !departmentId || !fee)
+    if(!eventName || !introduction || !prices || !date || !teamSize || !contact || !rulesAndRegulations || !departmentId || !fee || !duration)
         throw new BadRequestError("All event fields were not provided")
 
     const dep = await Department.find({_id:departmentId})
@@ -60,6 +62,7 @@ export const getDepartmentEvents = async(req:Request,res:Response)=>{
             'eventName':item.eventName,
             'date':item.date,
             'department':item.departmentId,
+            'deptName':getDepartmentNameById(item.departmentId),
             'imageUrl':item.imageURL
         })
     })
@@ -75,6 +78,7 @@ export const getAllEvents = async(req:Request,res:Response)=>{
             'eventName':item.eventName,
             'date':item.date,
             'department':item.departmentId,
+            'deptName':getDepartmentNameById(item.departmentId),
             'imageUrl':item.imageURL
         })
     })

@@ -4,6 +4,7 @@ interface IParticipants extends mongoose.Document {
     name:string;
     email: string;
     contact: string;
+    college:string;
     department: mongoose.Schema.Types.ObjectId;
     events: mongoose.Schema.Types.ObjectId[];
     verified: boolean;
@@ -34,6 +35,10 @@ const participantSchema = new mongoose.Schema<IParticipants>({
         ],
         default:"",
         unique:false
+    },
+    college:{
+        type:String,
+        default:""
     },
     verified:{type: Boolean, default : false},
     events:[{  
