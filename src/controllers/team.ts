@@ -15,9 +15,9 @@ interface participantInfo{
     idcard:string
 }
 export const createTeam = async(req:Request,res:Response)=>{
-    const {teamName,eventId,leader,participants} = req.body
-    if(!teamName || !eventId || !leader || !participants)
-        throw new BadRequestError("'teamName' 'eventId' 'leader' 'participants' cannot be empty")
+    const {teamName,eventId,leader,participants,payment_screenshot} = req.body
+    if(!teamName || !eventId || !leader || !participants || !payment_screenshot)
+        throw new BadRequestError("'teamName' 'eventId' 'leader' 'participants' 'payment_screenshot' cannot be empty")
 
     const event = await Event.findOne({_id:eventId})
     if(!event)
@@ -37,10 +37,15 @@ export const createTeam = async(req:Request,res:Response)=>{
     if(!emails.includes(leader))
         throw new BadRequestError("Leader should be part of team")
 
+    if(!(payment_screenshot.startsWith('data:')))
+        throw new BadRequestError('payment_screenshot must be base64 encoded')
+
+    const result = await cloudinary.v2.uploader.upload(payment_screenshot, { resource_type: "image" });
+
     participants.forEach(async(ele:participantInfo)=>{
         if(!ele.email || !ele.name || !ele.contact ||!ele.idcard)
             throw new BadRequestError("'email' 'name' 'contact' 'idcard' 'college' cannot be empty inside participants")
-        if(!ele.idcard.startsWith('data:image/'))
+        if(!(ele.idcard.startsWith('data:')))
             throw new BadRequestError('idcard must be base64 encoded')
 
         const temp = await Participants.find({email:ele.email})
@@ -51,7 +56,7 @@ export const createTeam = async(req:Request,res:Response)=>{
         await Participants.findOneAndUpdate({email:ele.email},{ $push: { events: eventId } })
     })
     
-    await Team.create({teamName,eventId,leader,participants:emails})
+    await Team.create({teamName,eventId,leader,participants:emails,payment_screenshot:result.secure_url})
     
     res.status(StatusCodes.OK).json({msg:"Team Added"})
 }
