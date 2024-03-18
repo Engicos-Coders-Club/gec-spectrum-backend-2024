@@ -6,11 +6,9 @@ const url: string = "api.zeptomail.in/";
 const token: string = process.env.ZEPTO_MAIL_TOKEN || "";
 let client: SendMailClient = new SendMailClient({ url, token });
 
+async function sendEmail(email:string,name:string,subjectBody:string,htmlBody:string) {
 
-async function sendOtpEmail(email: string, otp: string, name: string = "", message: string = "") {
-
-
- client.sendMail({
+client.sendMail({
     "from": {
         "address": "no-reply@gecspectrum.com",
         "name": "noreply"
@@ -23,9 +21,28 @@ async function sendOtpEmail(email: string, otp: string, name: string = "", messa
             }
         }
     ],
-    "subject": `Hello${name ? ' ' + name : ''} Your OTP`,
-    "htmlbody": `<div><b>${message ? message + '\n' : '' } Your OTP is ${otp}.</b></div>`,
+    "subject": subjectBody,
+    "htmlbody": htmlBody,
 }).then((resp: any) => console.log("success")).catch((error: any) => console.log("email sender error"));
+
+}
+
+async function sendOtpEmail(email: string, otp: string = '', name: string = "", message: string = "", subject:string='', custom:boolean=false) {
+ let subjectBody: string
+ let htmlBody: string  
+ if (custom)
+ {
+    let subjectBody: string = subject
+    let htmlBody: string = message
+    sendEmail(email,name,subjectBody,htmlBody)
+ }
+ else   
+    {
+        let subjectBody: string = `Hello${name ? ' ' + name : ''} Your OTP`
+        let htmlBody: string =`<div><b>${message ? message + '\n' : '' } Your OTP is ${otp}.</b></div>`
+        sendEmail(email,name,subjectBody,htmlBody)
+    }
+    
 }
 
 //if (import.meta.url === `file://${process.argv[1]}`) { // will only run when the file is individually executed, not when imported
