@@ -16,7 +16,8 @@ export const checkPaymentStatus = async(req:Request,res:Response)=>{
 
 export const updatePaymentStatus = async(req:Request,res:Response)=>{
     const {teamId, eventId} = req.params;
-    const eventName = await Event.findById(eventId);
+    const event = await Event.findById(eventId);
+    const eventName = event?.eventName as string;
     const team = await Team.findByIdAndUpdate(teamId,{paid:true})
     const teamName = team?.teamName;
     const teamLeaderEmail = team?.leader as string;
