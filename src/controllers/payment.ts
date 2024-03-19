@@ -18,7 +18,13 @@ export const updatePaymentStatus = async(req:Request,res:Response)=>{
 
     const {teamId, eventId} = req.params;
 
+    const department = req.user?.department
+    const isAdmin = req.user?.isAdmin
 
+    if(!department && !isAdmin)
+        throw new UnauthenticatedError("You dont have authority to perform this action")
+    
+    
     const team = await Team.findByIdAndUpdate(teamId,{paid:true})
     const event = await Event.findById(eventId);
     
