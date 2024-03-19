@@ -23,7 +23,7 @@ export const updatePaymentStatus = async(req:Request,res:Response)=>{
     const teamLeaderEmail = team?.leader as string;
     //finds the email of the team leader and sends them an email confirming their entry
     //by sending an email like sendOtpEmail(email=teamLeaderEmail, name=teamName, message="Your payment has been successfull and your team ${teamName} has succesfully been added as a team", subject="Payment Confirmation For ${eventName}");
-    sendOtpEmail(teamLeaderEmail, '', teamName, `Your payment has been successful and your team ${teamName} has been sucessfully registered`, `Payment Confirmation ${eventName ? 'For' + eventName: ''}`, true);
+    sendOtpEmail(teamLeaderEmail, '', teamName, `Your payment has been successful and your team ${teamName} has been sucessfully registered`, `Payment Confirmation ${eventName ? 'For ' + eventName : ''}`, true);
     
     if(!team)
         throw new NotFoundError(`No team with id ${teamId}`)
