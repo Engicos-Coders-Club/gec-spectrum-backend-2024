@@ -11,6 +11,7 @@ interface IParticipants extends mongoose.Document {
     otp: string;
     idcard:string;
     checkOtp(key: number): boolean;
+    teams: mongoose.Schema.Types.ObjectId[];
 }
 
 const participantSchema = new mongoose.Schema<IParticipants>({
@@ -46,7 +47,11 @@ const participantSchema = new mongoose.Schema<IParticipants>({
         default:[]
     }],
     otp:{type: String},
-    idcard:{type:String,default:""}
+    idcard:{type:String,default:""},
+    teams:[{
+        type:mongoose.Schema.Types.ObjectId,
+        default:[],
+    }]
 })
 
 // mongoose schema instance methods

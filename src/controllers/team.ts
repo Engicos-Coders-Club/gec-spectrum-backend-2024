@@ -53,11 +53,16 @@ export const createTeam = async(req:Request,res:Response)=>{
             const result = await cloudinary.v2.uploader.upload(ele.idcard, { resource_type: "image" });
             await Participants.create({email:ele.email,name:ele.name,idcard:result.secure_url,contact:ele.contact,college:ele.college})
         }
+        
         await Participants.findOneAndUpdate({email:ele.email},{ $push: { events: eventId } })
     })
     
     await Team.create({teamName,eventId,leader,participants:emails,payment_screenshot:result.secure_url})
+
+    //update all participants in the team with the team name and teamId
     
+    await Participants.updateMany({email:emails},{teamName:teamName,teamId:eventId})
+
     res.status(StatusCodes.OK).json({msg:"Team Added"})
 }
 export const getTeams = async(req:Request,res:Response)=>{
