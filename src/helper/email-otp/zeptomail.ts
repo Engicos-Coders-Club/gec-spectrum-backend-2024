@@ -34,6 +34,7 @@ async function sendOtpEmail(email: string, otp: string = '', name: string = "", 
     const htmlBody: string = message
     sendEmail(email,name,subjectBody,htmlBody)
  }
+ 
  else   
     {
         const subjectBody: string = `Hello${name ? ' ' + name : ''} Your OTP`
