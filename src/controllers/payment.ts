@@ -15,14 +15,21 @@ export const checkPaymentStatus = async(req:Request,res:Response)=>{
 }
 
 export const updatePaymentStatus = async(req:Request,res:Response)=>{
+
     const {teamId, eventId} = req.params;
-    const event = await Event.findById(eventId);
-    const eventName = event?.eventName || '';
+
+
     const team = await Team.findByIdAndUpdate(teamId,{paid:true})
-    const teamName = team?.teamName;
+    const event = await Event.findById(eventId);
+    
+
+    const eventName = event?.eventName as string;
+    const teamName = team?.teamName as string;
     const teamLeaderEmail = team?.leader as string;
+    
     //finds the email of the team leader and sends them an email confirming their entry
     //by sending an email like sendOtpEmail(email=teamLeaderEmail, name=teamName, message="Your payment has been successfull and your team ${teamName} has succesfully been added as a team", subject="Payment Confirmation For ${eventName}");
+    
     sendOtpEmail(teamLeaderEmail, '', teamName, `Your payment has been successful and your team ${teamName} has been sucessfully registered`, `Payment Confirmation ${eventName ? 'For ' + eventName : ''}`, true);
     
     if(!team)
