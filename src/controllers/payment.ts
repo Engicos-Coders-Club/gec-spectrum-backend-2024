@@ -16,7 +16,7 @@ export const checkPaymentStatus = async(req:Request,res:Response)=>{
 
 export const updatePaymentStatus = async(req:Request,res:Response)=>{
 
-    const {teamId, eventId} = req.params;
+    const {teamId} = req.params;
 
     const department = req.user?.department
     const isAdmin = req.user?.isAdmin
@@ -26,7 +26,7 @@ export const updatePaymentStatus = async(req:Request,res:Response)=>{
     
     
     const team = await Team.findByIdAndUpdate(teamId,{paid:true})
-    const event = await Event.findById(eventId);
+    const event = await Event.findById(team?.eventId);
     
 
     const eventName = event?.eventName as string;
@@ -36,7 +36,7 @@ export const updatePaymentStatus = async(req:Request,res:Response)=>{
     //finds the email of the team leader and sends them an email confirming their entry
     //by sending an email like sendOtpEmail(email=teamLeaderEmail, name=teamName, message="Your payment has been successfull and your team ${teamName} has succesfully been added as a team", subject="Payment Confirmation For ${eventName}");
     
-    sendOtpEmail(teamLeaderEmail, '', teamName, `Your payment has been successful and your team ${teamName} has been sucessfully registered`, `Payment Confirmation ${eventName ? 'For ' + eventName : ''}`, true);
+sendOtpEmail(teamLeaderEmail, '', teamName, `Your payment has been successful and your team ${teamName} has been sucessfully registered for the event ${eventName} at GEC Spectrum`, `Participation & Payment Confirmation For ${eventName}`, true);
     
     if(!team)
         throw new NotFoundError(`No team with id ${teamId}`)
