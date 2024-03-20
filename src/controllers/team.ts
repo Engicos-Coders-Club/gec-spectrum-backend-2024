@@ -59,9 +59,8 @@ export const createTeam = async(req:Request,res:Response)=>{
     
     const team = await Team.create({teamName,eventId,leader,participants:emails,payment_screenshot:result.secure_url})
 
-    //update all participants in the team with the team name and teamId
-    
-    await Participants.updateMany({email:emails},{teams:team})
+    //update all participants in the team with the whole team object
+    await Participants.updateMany({email:emails},{ $push: { teams: team._id } })
 
     res.status(StatusCodes.OK).json({msg:"Team Added"})
 }
@@ -109,6 +108,11 @@ export const getParticipant = async(req:Request,res:Response)=>{
     const participant = await Participants.findOne({email:email})
     if(!participant)
         throw new NotFoundError(`No participant with email ${email}`)
+    
+    // add all the teams the pariticipant belongs to in the participant object before sending it
+    const teamPromises = participant.teams.map(async (teamId: any) => {
+        return await Team.find({ _id: teamId });
+    })
     res.status(StatusCodes.OK).json(participant)
 }
 
