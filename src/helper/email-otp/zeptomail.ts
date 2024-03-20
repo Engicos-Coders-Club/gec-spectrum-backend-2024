@@ -28,18 +28,17 @@ client.sendMail({
 }
 
 async function sendOtpEmail(email: string, otp: string = '', name: string = "", message: string = "", subject:string='', custom:boolean=false) {
- let subjectBody: string
- let htmlBody: string  
  if (custom)
  {
-    let subjectBody: string = subject
-    let htmlBody: string = message
+    const subjectBody: string = subject
+    const htmlBody: string = message
     sendEmail(email,name,subjectBody,htmlBody)
  }
+ 
  else   
     {
-        let subjectBody: string = `Hello${name ? ' ' + name : ''} Your OTP`
-        let htmlBody: string =`<div><b>${message ? message + '\n' : '' } Your OTP is ${otp}.</b></div>`
+        const subjectBody: string = `Hello${name ? ' ' + name : ''} Your OTP`
+        const htmlBody: string =`<div><b>${message ? message + '\n' : '' } Your OTP is ${otp}.</b></div>`
         sendEmail(email,name,subjectBody,htmlBody)
     }
     
