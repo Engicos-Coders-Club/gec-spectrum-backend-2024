@@ -57,11 +57,11 @@ export const createTeam = async(req:Request,res:Response)=>{
         await Participants.findOneAndUpdate({email:ele.email},{ $push: { events: eventId } })
     })
     
-    await Team.create({teamName,eventId,leader,participants:emails,payment_screenshot:result.secure_url})
+    const team = await Team.create({teamName,eventId,leader,participants:emails,payment_screenshot:result.secure_url})
 
     //update all participants in the team with the team name and teamId
     
-    await Participants.updateMany({email:emails},{teamName:teamName,teamId:eventId})
+    await Participants.updateMany({email:emails},{teams:team})
 
     res.status(StatusCodes.OK).json({msg:"Team Added"})
 }
