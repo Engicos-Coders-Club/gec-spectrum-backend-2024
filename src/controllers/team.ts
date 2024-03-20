@@ -42,6 +42,8 @@ export const createTeam = async(req:Request,res:Response)=>{
 
     const result = await cloudinary.v2.uploader.upload(payment_screenshot, { resource_type: "image" });
 
+    const team = await Team.create({teamName,eventId,leader,participants:emails,payment_screenshot:result.secure_url})
+
     participants.forEach(async(ele:participantInfo)=>{
         if(!ele.email || !ele.name || !ele.contact ||!ele.idcard)
             throw new BadRequestError("'email' 'name' 'contact' 'idcard' 'college' cannot be empty inside participants")
@@ -54,14 +56,10 @@ export const createTeam = async(req:Request,res:Response)=>{
             await Participants.create({email:ele.email,name:ele.name,idcard:result.secure_url,contact:ele.contact,college:ele.college})
         }
         
-        await Participants.findOneAndUpdate({email:ele.email},{ $push: { events: eventId } })
+        await Participants.findOneAndUpdate({email:ele.email},{ $push: { events: eventId, teams: team } })
     })
     
-    const team = await Team.create({teamName,eventId,leader,participants:emails,payment_screenshot:result.secure_url})
-
-    //update all participants in the team with the whole team object
-    await Participants.updateMany({email:emails},{ $push: { teams: team._id } })
-
+    
     res.status(StatusCodes.OK).json({msg:"Team Added"})
 }
 export const getTeams = async(req:Request,res:Response)=>{
