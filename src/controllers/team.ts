@@ -87,7 +87,13 @@ export const getTeam = async(req:Request,res:Response)=>{
     const team = await Team.find({_id:teamId})
     if(team.length === 0)
         throw new NotFoundError(`No team with id ${teamId}`)
-    res.status(StatusCodes.OK).json({"team":team[0]})
+
+    const participantEmails = team[0].participants;
+    const participantPromises = participantEmails.map(async (email: any) => {
+        return await Participants.find({ email: email });
+    });
+    const participants = await Promise.all(participantPromises);
+    res.status(StatusCodes.OK).json({"team":team[0],"participants":participants})
 }
 
 export const getParticipant = async(req:Request,res:Response)=>{
