@@ -4,6 +4,7 @@ import { Participants } from '../models/Participant.js';
 import { Team } from '../models/Team.js';
 import {StatusCodes} from 'http-status-codes'
 import { verifyPaymentSignature } from '../payments/index.js';
+import { departmentNameById } from '../helper/utils.js';
 import {BadRequestError,NotFoundError,UnauthenticatedError} from '../errors/index.js'
 import { Request, Response} from 'express';
 import jwt from 'jsonwebtoken'
@@ -42,7 +43,9 @@ export const loginCoordinator = async(req:Request,res:Response)=>{
     }
     const token = user.createJWT();
     
-    res.status(StatusCodes.OK).json({token, user});
+    const userDept = departmentNameById[`${user.department}`];
+
+    res.status(StatusCodes.OK).json({token, user, userDept});
 }
 
 export const loginAdmin = async(req:Request,res:Response)=>{
