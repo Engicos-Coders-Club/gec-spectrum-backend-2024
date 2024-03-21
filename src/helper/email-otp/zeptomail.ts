@@ -1,4 +1,5 @@
 import { SendMailClient } from "zeptomail";
+import { emailDefaultOtpTemplate } from "../email-template.js";
 import { config } from 'dotenv';
 config();
 
@@ -9,6 +10,7 @@ let client: SendMailClient = new SendMailClient({ url, token });
 async function sendEmail(email:string,name:string,subjectBody:string,htmlBody:string) {
 
 client.sendMail({
+    
     "from": {
         "address": "no-reply@gecspectrum.com",
         "name": "noreply"
@@ -23,6 +25,7 @@ client.sendMail({
     ],
     "subject": subjectBody,
     "htmlbody": htmlBody,
+
 }).then((resp: any) => console.log("success")).catch((error: any) => console.log("email sender error"));
 
 }
@@ -37,8 +40,8 @@ async function sendOtpEmail(email: string, otp: string = '', name: string = "", 
  
  else   
     {
-        const subjectBody: string = `Hello${name ? ' ' + name : ''} Your OTP`
-        const htmlBody: string =`<div><b>${message ? message + '\n' : '' } Your OTP is ${otp}.</b></div>`
+        const subjectBody: string = emailDefaultOtpTemplate(name,otp,message).subjectBody
+        const htmlBody: string = emailDefaultOtpTemplate(name,otp,message).htmlBody
         sendEmail(email,name,subjectBody,htmlBody)
     }
     
