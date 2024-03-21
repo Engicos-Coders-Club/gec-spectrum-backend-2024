@@ -3,6 +3,7 @@ import {BadRequestError,NotFoundError,UnauthenticatedError} from '../errors/inde
 import { Request, Response} from 'express';
 import { Team } from '../models/Team.js';
 import { Event } from '../models/Event.js';
+import { emailDefaultPaymentConfirmation } from '../helper/email-template.js';
 import { sendOtpEmail } from '../helper/email-otp/index.js';
 import cloudinary from 'cloudinary'
 
@@ -36,7 +37,9 @@ export const updatePaymentStatus = async(req:Request,res:Response)=>{
     //finds the email of the team leader and sends them an email confirming their entry
     //by sending an email like sendOtpEmail(email=teamLeaderEmail, name=teamName, message="Your payment has been successfull and your team ${teamName} has succesfully been added as a team", subject="Payment Confirmation For ${eventName}");
     
-sendOtpEmail(teamLeaderEmail, '', teamName, `Your payment has been successful and your team ${teamName} has been sucessfully registered for the event ${eventName} at GEC Spectrum`, `Participation & Payment Confirmation For ${eventName}`, true);
+    const data = emailDefaultPaymentConfirmation(eventName,teamName);
+
+sendOtpEmail(teamLeaderEmail, '', teamName, data.htmlBody, data.subjectBody, true);
     
     if(!team)
         throw new NotFoundError(`No team with id ${teamId}`)

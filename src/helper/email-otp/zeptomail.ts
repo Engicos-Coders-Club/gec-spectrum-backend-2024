@@ -30,6 +30,7 @@ client.sendMail({
 
 }
 
+// while sending an OTP a message can be added, if custom is true it will not use the default template and use whatever you provide
 async function sendOtpEmail(email: string, otp: string = '', name: string = "", message: string = "", subject:string='', custom:boolean=false) {
  if (custom)
  {
