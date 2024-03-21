@@ -41,7 +41,7 @@ export const loginCoordinator = async(req:Request,res:Response)=>{
         throw new UnauthenticatedError('Invalid Credentials')
     }
     const token = user.createJWT();
-    res.status(StatusCodes.OK).json({token});
+    res.status(StatusCodes.OK).json({token, user});
 }
 
 export const loginAdmin = async(req:Request,res:Response)=>{
