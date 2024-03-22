@@ -78,6 +78,35 @@ export const getTeams = async(req:Request,res:Response)=>{
     res.status(StatusCodes.OK).json(teams)
 }
 
+export const getTeamsWhole = async(req:Request,res:Response)=>{
+    const {eventId} = req.params
+    const department = req.user?.department
+    const isAdmin = req.user?.isAdmin
+
+    const event = await Event.findById(eventId)
+    if(!event)
+        throw new NotFoundError(`No event with id ${eventId}`)
+
+    if(department != event.departmentId && !isAdmin)
+        throw new UnauthenticatedError("You do not belong to the department of this event")
+    
+    const teams = await Team.find({eventId:eventId})
+
+    //couple all the participant objs with the team obj and return the data if detailed is true else only return team objs
+        const participantPromises = teams.map(async (team: any) => {
+            const participantEmails = team.participants;
+            const participantPromises = participantEmails.map(async (email: any) => {
+                return await Participants.find({ email: email });
+            });
+            const participants = await Promise.all(participantPromises);
+            //return an array of teams with participants, [team:praticipant[],team:praticipant[]]
+            return { team: team, participants: participants }; //returns 
+        });
+        const teamsWithParticipants = await Promise.all(participantPromises);
+        res.status(StatusCodes.OK).json(teamsWithParticipants)
+}
+
+
 export const getTeam = async(req:Request,res:Response)=>{
     const {teamId} = req.params
     const department = req.user?.department
