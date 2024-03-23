@@ -13,7 +13,7 @@ client.sendMail({
     
     "from": {
         "address": "no-reply@gecspectrum.com",
-        "name": "noreply"
+        "name": "GEC Spectrum 2024"
     },
     "to": [
         {
