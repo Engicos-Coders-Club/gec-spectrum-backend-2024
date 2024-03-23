@@ -4,6 +4,7 @@ import { Participants } from '../models/Participant.js';
 import { Team } from '../models/Team.js';
 import {StatusCodes} from 'http-status-codes'
 import { verifyPaymentSignature } from '../payments/index.js';
+import { participantRegisteredTemplate } from '../helper/email-template.js';
 import { departmentNameById } from '../helper/utils.js';
 import {BadRequestError,NotFoundError,UnauthenticatedError} from '../errors/index.js'
 import { Request, Response} from 'express';
@@ -106,8 +107,11 @@ export const verifyOtp = async(req:Request,res:Response)=>{
     if(participant.otp !== otp)
     throw new UnauthenticatedError("Invalid OTP")
 
+    if (participant.verified){
+}    else {
     await Participants.findOneAndUpdate({email},{verified:true});
     
+}
     res.status(StatusCodes.OK).json({msg:"OTP verified"});
 }
 
