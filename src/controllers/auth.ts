@@ -71,15 +71,27 @@ export const loginAdmin = async(req:Request,res:Response)=>{
 export const sendOtp = async(req:Request,res:Response)=>{
 
     const { email, contact, message } = req.body;
+
+    if(!email)
+        throw new BadRequestError("'email' should be given as query params")
+
     const otp = generateOtp(); 
 
     const temp = await Participants.find({email:email})
+    console.log(email)
     if(temp.length > 0){
+
         sendOtpEmail(email,otp, message)
         await Participants.findOneAndUpdate({email},{otp:otp});
+
     }else{
+
+        if (!contact)
+        throw new BadRequestError("'contact' should be given as query params")
+        
         sendOtpEmail(email, otp, message); // Implement this function
         await Participants.create({email,contact,otp});
+
     }
     res.status(StatusCodes.OK).json({msg:"OTP sent"});
 }
