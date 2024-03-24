@@ -33,7 +33,7 @@ export const createTeam = async(req:Request,res:Response)=>{
     if(event.teamSize.max < participants.length && participants.length < event.teamSize.min)
         throw new BadRequestError(`Invalid number of participants, Max:${event.teamSize.max}, Min:${event.teamSize.min}`);
 
-    const emails = participants.map((participant:participantInfo) => participant.email);
+    const emails:string[] = participants.map((participant:participantInfo) => participant.email);
     if(!emails.includes(leader))
         throw new BadRequestError("Leader should be part of team")
 
