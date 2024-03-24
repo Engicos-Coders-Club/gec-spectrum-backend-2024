@@ -5,7 +5,10 @@ import {BadRequestError,CustomAPIError,NotFoundError,UnauthenticatedError} from 
 import { Request, Response} from 'express';
 import { Participants } from '../models/Participant.js';
 import { Team } from '../models/Team.js';
+import { sendOtpEmail } from '../helper/email-otp/zeptomail.js';
 import cloudinary from "cloudinary";
+import { eventNames } from 'process';
+import { participantRegisteredTemplate, teamRegistrationAdminUpdateTemplate } from '../helper/email-template.js';
 
 interface participantInfo{
     email:string
@@ -58,7 +61,10 @@ export const createTeam = async(req:Request,res:Response)=>{
         
         await Participants.findOneAndUpdate({email:ele.email},{ $push: { events: eventId, teams: team } })
     })
-    
+    const data = participantRegisteredTemplate(event.eventName,teamName)
+    const adminData = teamRegistrationAdminUpdateTemplate(event.eventName,teamName)
+    sendOtpEmail(leader, '', teamName, data.htmlBody, data.subjectBody, true);
+    sendOtpEmail("gecstudentscouncil@gmail.com", '', "Spectrum 2024 Admin", adminData.htmlBody, adminData.subjectBody, true);
     
     res.status(StatusCodes.OK).json({msg:"Team Added"})
 }
