@@ -40,6 +40,13 @@ export const createTeam = async(req:Request,res:Response)=>{
     if(!emails.includes(leader))
         throw new BadRequestError("Leader should be part of team")
 
+    const temp:string[] = []
+    emails.forEach((ele)=>{
+        if(temp.includes(ele))
+            throw new BadRequestError("Duplicate email")
+        temp.push(ele)
+    })
+
     if(!(payment_screenshot.startsWith('data:')))
         throw new BadRequestError('payment_screenshot must be base64 encoded')
 
