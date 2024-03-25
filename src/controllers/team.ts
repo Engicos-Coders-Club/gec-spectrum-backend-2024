@@ -156,5 +156,60 @@ export const getParticipant = async(req:Request,res:Response)=>{
     res.status(StatusCodes.OK).json(participant)
 }
 
+export const initializeTeam = async(req:Request,res:Response)=>{
+    const {teamName,eventId,leader} = req.body
 
+    if(!teamName || !eventId || !leader || !req.file)
+        throw new BadRequestError("'teamName' 'eventId' 'leader' 'file'(payment_screenshot) cannot be empty")
+
+    const event = await Event.findOne({_id:eventId})
+    if(!event)
+        throw new NotFoundError(`No event with id ${eventId}`)
+
+    const limit = event.participationLimit
+    if(limit != -1){
+        const entries = await Team.find({eventId:eventId})
+        if(entries.length >= limit)
+            throw new CustomAPIError("Participation limit reached",StatusCodes.FORBIDDEN);
+    }
+
+    const file = req.file as Express.Multer.File
+    const dataUrl = `data:image/jpeg;base64,${file.buffer.toString('base64')}`;
+    const result = await cloudinary.v2.uploader.upload(dataUrl, { resource_type: "image" });
+    const team = await Team.create({teamName,eventId,leader,payment_screenshot:result.secure_url})
+    
+
+    const data = participantRegisteredTemplate(event.eventName,teamName)
+    const adminData = teamRegistrationAdminUpdateTemplate(event.eventName,teamName)
+    sendOtpEmail(leader, '', teamName, data.htmlBody, data.subjectBody, true);
+    sendOtpEmail("gecstudentscouncil@gmail.com", '', "Spectrum 2024 Admin", adminData.htmlBody, adminData.subjectBody, true);
+    
+    res.status(StatusCodes.OK).json({msg:"Team Added",teamId:team._id})
+}
+
+export const addParticipant = async(req:Request,res:Response)=>{
+    const {teamId} = req.params
+    const team = await Team.findById(teamId)
+    if(!team)
+        throw new NotFoundError(`No team with id ${teamId}`)
+
+    const {email,name,contact,college} = req.body
+    if(!email || !name || !contact || !college)
+        throw new BadRequestError("'email' 'name' 'contact' 'college' cannot be empty inside participants")
+
+    const file = req.file as Express.Multer.File
+    if(!file)
+        throw new BadRequestError("'file' (idcard) cannot be empty")
+
+    const temp = await Participants.find({email})
+    if(temp.length == 0){
+        const dataUrl = `data:image/jpeg;base64,${file.buffer.toString('base64')}`;
+        const result = await cloudinary.v2.uploader.upload(dataUrl, { resource_type: "image" });
+        await Participants.create({email,name,idcard:result.secure_url,contact,college})
+    }
+    await Participants.findOneAndUpdate({email},{ $push: { events: team.eventId, teams: teamId } })
+    await Team.findOneAndUpdate({ _id: teamId }, { $push: { participants: email } })
+
+    res.status(StatusCodes.OK).json({ msg: "Participant added to team" })
+}
 

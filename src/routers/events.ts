@@ -2,7 +2,7 @@ import { Router } from 'express';
 import multer from 'multer';
 import { addEvent, addImage, deleteEvent, getAllEvents, getDepartmentEvents, getSingleEvent, updateEvent } from '../controllers/events.js';
 import adminAuthenticationMiddleware from '../middlewares/admin-authentication.js';
-import { createTeam,getParticipant,getTeam,getTeams,getTeamsWhole} from '../controllers/team.js';
+import { createTeam,getParticipant,getTeam,getTeams,getTeamsWhole,addParticipant,initializeTeam} from '../controllers/team.js';
 import authenticationMiddleware from '../middlewares/authentication.js';
 
 const router = Router();
@@ -26,5 +26,8 @@ router.route('/get-teams-whole/:eventId').get(authenticationMiddleware, getTeams
 
 
 router.route('/get-team/:teamId').get(authenticationMiddleware,getTeam)
+
+router.route('/initialize-team').post(upload.single('file'),initializeTeam)
+router.route('/add-participant/:teamId').post(upload.single('file'),addParticipant)
 
 export default router;
