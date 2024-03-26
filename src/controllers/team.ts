@@ -177,9 +177,6 @@ export const initializeTeam = async(req:Request,res:Response)=>{
     const payment_screenshot=files['payment'][0];
     const idcard = files['idcard'][0];
 
-    // const files = req.files as Express.Multer.File[];
-    console.log(payment_screenshot,idcard)
-
     // Check if payment and idcard files are uploaded
     
     if (!payment_screenshot || !idcard)
