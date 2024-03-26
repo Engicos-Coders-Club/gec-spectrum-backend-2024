@@ -27,7 +27,7 @@ router.route('/get-teams-whole/:eventId').get(authenticationMiddleware, getTeams
 
 router.route('/get-team/:teamId').get(authenticationMiddleware,getTeam)
 
-router.route('/initialize-team').post(upload.single('file'),initializeTeam)
+router.route('/initialize-team').post(upload.fields([{name:'idcard'},{name:'payment'}]),initializeTeam)
 router.route('/add-participant/:teamId').post(upload.single('file'),addParticipant)
 
 export default router;

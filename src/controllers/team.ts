@@ -157,10 +157,10 @@ export const getParticipant = async(req:Request,res:Response)=>{
 }
 
 export const initializeTeam = async(req:Request,res:Response)=>{
-    const {teamName,eventId,leader} = req.body
+    const {teamName,eventId,leader,leaderName,leaderContact,leaderCollege} = req.body
 
-    if(!teamName || !eventId || !leader || !req.file)
-        throw new BadRequestError("'teamName' 'eventId' 'leader' 'file'(payment_screenshot) cannot be empty")
+    if(!teamName || !eventId || !leader || !leaderName || !leaderContact || !leaderCollege)
+        throw new BadRequestError("'teamName' 'eventId' 'leader' 'leaderName' 'leaderContact' 'leaderCollege' cannot be empty")
 
     const event = await Event.findOne({_id:eventId})
     if(!event)
@@ -173,12 +173,40 @@ export const initializeTeam = async(req:Request,res:Response)=>{
             throw new CustomAPIError("Participation limit reached",StatusCodes.FORBIDDEN);
     }
 
-    const file = req.file as Express.Multer.File
-    const dataUrl = `data:image/jpeg;base64,${file.buffer.toString('base64')}`;
-    const result = await cloudinary.v2.uploader.upload(dataUrl, { resource_type: "image" });
-    const team = await Team.create({teamName,eventId,leader,payment_screenshot:result.secure_url})
-    
+    const files= req.files as  {[fieldname: string]: Express.Multer.File[]};
+    const payment_screenshot=files['payment'][0];
+    const idcard = files['idcard'][0];
 
+    // const files = req.files as Express.Multer.File[];
+    console.log(payment_screenshot,idcard)
+
+    // Check if payment and idcard files are uploaded
+    
+    if (!payment_screenshot || !idcard)
+        throw new BadRequestError("Both 'payment' and 'idcard' files are required");
+
+    let dataUrl = `data:image/jpeg;base64,${payment_screenshot.buffer.toString('base64')}`;
+    const paymentResult = await cloudinary.v2.uploader.upload(dataUrl, { resource_type: "image" });
+
+    dataUrl = `data:image/jpeg;base64,${idcard.buffer.toString('base64')}`;
+    const idCardResult = await cloudinary.v2.uploader.upload(dataUrl, { resource_type: "image" });
+
+
+    // Create team with uploaded file URLs
+    const team = await Team.create({
+        teamName,
+        eventId,
+        leader,
+        payment_screenshot: paymentResult.secure_url
+    });
+
+    const temp = await Participants.find({email:leader})
+    if(temp.length == 0){
+        await Participants.create({email:leader,name:leaderName,idcard:idCardResult.secure_url,contact:leaderContact,college:leaderCollege})
+    }
+    await Participants.findOneAndUpdate({email:leader},{ $push: { events: team.eventId, teams: team._id } })
+
+    // Send OTP to leader
     const data = participantRegisteredTemplate(event.eventName,teamName)
     const adminData = teamRegistrationAdminUpdateTemplate(event.eventName,teamName)
     sendOtpEmail(leader, '', teamName, data.htmlBody, data.subjectBody, true);
