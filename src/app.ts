@@ -41,7 +41,7 @@ app.use(
 
 app.use(helmet());
 app.use(cors({
-  origin: ["http://localhost:3000","https://www.gecspectrum.com","https://gec-spectrum-website-2024-git-main-gec-coders-clubs-projects.vercel.app"],
+  origin: ["http://localhost:3000","https://www.gecspectrum.com","https://gec-spectrum-website-2024-git-main-gec-coders-clubs-projects.vercel.app","http://localhost:5500"],
   methods: ["GET", "POST", "PATCH", "DELETE"],
 }));
 
