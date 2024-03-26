@@ -205,6 +205,7 @@ export const initializeTeam = async(req:Request,res:Response)=>{
         await Participants.create({email:leader,name:leaderName,idcard:idCardResult.secure_url,contact:leaderContact,college:leaderCollege})
     }
     await Participants.findOneAndUpdate({email:leader},{ $push: { events: team.eventId, teams: team._id } })
+    await Team.findOneAndUpdate({ _id: team._id }, { $push: { participants: leader } })
 
     // Send OTP to leader
     const data = participantRegisteredTemplate(event.eventName,teamName)
