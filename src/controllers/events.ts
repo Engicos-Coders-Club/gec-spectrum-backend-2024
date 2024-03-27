@@ -7,7 +7,7 @@ import { Request, Response} from 'express';
 import cloudinary from "cloudinary";
 import { departmentNameById } from '../helper/utils.js';
 
-interface EventInfo {
+export interface EventInfo {
     eventId:string;
     eventName: string;
     date: Date;
@@ -69,7 +69,7 @@ export const getDepartmentEvents = async(req:Request,res:Response)=>{
     res.status(StatusCodes.OK).json({"events":ls})
 }
 
-export const getAllEvents = async(req:Request,res:Response)=>{
+export const getAllEventsFunc = async()=>{
     const ls:EventInfo[] = []
     const events = await Event.find({})
     events.forEach((item)=>{
@@ -82,7 +82,12 @@ export const getAllEvents = async(req:Request,res:Response)=>{
             'imageUrl':item.imageURL
         })
     })
+    return ls
+}
+export const getAllEvents = async(req:Request,res:Response)=>{
+    const ls = await getAllEventsFunc()
     res.status(StatusCodes.OK).json({"events":ls})
+  
 }
 
 export const addImage = async(req:Request,res:Response)=>{

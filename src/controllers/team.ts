@@ -6,6 +6,7 @@ import { Request, Response} from 'express';
 import { Participants } from '../models/Participant.js';
 import { Team } from '../models/Team.js';
 import { sendOtpEmail } from '../helper/email-otp/zeptomail.js';
+import { getAllEventsFunc } from './events.js';
 import cloudinary from "cloudinary";
 import { eventNames } from 'process';
 import { participantRegisteredTemplate, teamRegistrationAdminUpdateTemplate } from '../helper/email-template.js';
@@ -17,6 +18,12 @@ interface participantInfo{
     college:string
     idcard:string
 }
+
+interface teamsInfo{
+   event:object
+   teams:object
+}
+
 export const createTeam = async(req:Request,res:Response)=>{
     const {teamName,eventId,leader,participants,payment_screenshot} = req.body
     if(!teamName || !eventId || !leader || !participants || !payment_screenshot)
@@ -91,10 +98,7 @@ export const getTeams = async(req:Request,res:Response)=>{
     res.status(StatusCodes.OK).json(teams)
 }
 
-export const getTeamsWhole = async(req:Request,res:Response)=>{
-    const {eventId} = req.params
-    const department = req.user?.department
-    const isAdmin = req.user?.isAdmin
+export const getTeamsWholeFunc = async(eventId:string, department:string | undefined, isAdmin:boolean | undefined)=>{
 
     const event = await Event.findById(eventId)
     if(!event)
@@ -116,7 +120,24 @@ export const getTeamsWhole = async(req:Request,res:Response)=>{
             return { team: team, participants: participants }; //returns 
         });
         const teamsWithParticipants = await Promise.all(participantPromises);
+        return teamsWithParticipants
+
+    
+}
+
+export const getTeamsWhole = async(req:Request,res:Response)=>{
+    const {eventId} = req.params
+    const department = req.user?.department
+    const isAdmin = req.user?.isAdmin
+    if(eventId=='getAll'){
+        const allTeams = await getAllTeamsFunc(isAdmin);
+        res.status(StatusCodes.OK).json(allTeams)
+
+        
+    }else{
+        const teamsWithParticipants = await getTeamsWholeFunc(eventId, department, isAdmin)
         res.status(StatusCodes.OK).json(teamsWithParticipants)
+    }
 }
 
 
@@ -239,3 +260,17 @@ export const addParticipant = async(req:Request,res:Response)=>{
     res.status(StatusCodes.OK).json({ msg: "Participant added to team" })
 }
 
+export const getAllTeamsFunc = async(isAdmin: boolean | undefined)=>{
+    //for every event which getAllEvents returns, loop getTeamsWhole for each
+    //get all events
+    const events = await getAllEventsFunc();
+   
+    //couple all the event objs with the team obj and return the data
+    const teamPromises = events.map(async (event: any) => {
+        const teams = await getTeamsWholeFunc(event.eventId,'', isAdmin);
+        return { event:event, teams:teams };
+    })
+     
+    const teams = await Promise.all(teamPromises);
+    return teams;
+}
