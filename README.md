@@ -4,15 +4,12 @@ Backend server for Spectrum 2024
 
 Deployed with docker on [fl0.com](https://www.fl0.com/)
 
-### To run locally
+### To run locally (Not deployed to dockerhubs yet)
 
-#### (In root directory)
+#### (In root directory) (Example)
 ```docker pull thunderblade03/spectrum-backend-2024:0.0.1.RELEASE```
 
 ```docker run -p 5000:5000 spectrum-backend-2024:0.0.1.RELEASE```
 
-## Postman Link
-
-[Postman](https://www.postman.com/solar-shuttle-316084/workspace/spectrum-2024/collection/24371326-48cb74cc-c49a-4eab-bbf4-7c3cbc27ab50?action=share&creator=24371326)
 
 
